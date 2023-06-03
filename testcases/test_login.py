@@ -3,6 +3,11 @@ import json
 import pytest
 from base import request_manager as cyrequest
 from testcases.conftest import *
+import hashlib
+import hmac
+import requests
+from base.endpoints import ReadEndpoint as re
+from testcases.constants import EndPointModuleConstants
 
 
 class TestLogin:
@@ -16,12 +21,14 @@ class TestLogin:
     @pytest.mark.regression
     def test_01_Login(self):
 
-        login_url = self.uri + "/api/login"
+        login_url = self.uri + str(re.fetch_endpoint("Login", "login_endpoint"))
         payload = {
             "email": self.email,
             "password": self.password
         }
-        response = cyrequest.post_query(url=login_url, json= payload)
+        # payload = json.loads(payload)
+        # payload = json.dumps(payload)
+        response = cyrequest.post_query(url=login_url, data= payload)
         pretty_print_request_body(response.request)
         json_response = json.loads(response.text)
         print(response.json()['token'])
